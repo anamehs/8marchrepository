@@ -76,6 +76,21 @@ body{
               radial-gradient(650px 260px at 85% 10%, rgba(255,255,255,.18), transparent 55%);
   opacity:.55; pointer-events:none;
 }
+.chip {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-block;
+  user-select: none;
+}
+
+.chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chip:active {
+  transform: translateY(0);
+}
 
 .hero{display:flex; gap:18px; align-items:center;}
 .lottie{width:110px; height:110px; flex:0 0 auto; filter: drop-shadow(0 14px 24px rgba(0,0,0,.35));}

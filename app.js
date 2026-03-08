@@ -57,6 +57,31 @@
       }
     } catch {}
   });
+  // Add click handlers for chips
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    let emoji = '';
+    switch(chip.textContent) {
+      case 'здоровья':
+        emoji = '❤️‍🩹';
+        break;
+      case 'радости':
+        emoji = '😊';
+        break;
+      case 'вдохновения':
+        emoji = '✨';
+        break;
+      case 'улыбок':
+        emoji = '😄';
+        break;
+      default:
+        emoji = '🎉';
+    }
+    emojiConfetti(emoji);
+    pulseChips();
+    if (tg) tg.HapticFeedback?.impactOccurred("light");
+  });
+});
 
   function typeWriter(el, text, speedMs) {
     let i = 0;
@@ -110,7 +135,73 @@
     const chips = document.querySelectorAll(".chip");
     gsap.fromTo(chips, { y: 0 }, { y: -6, duration: 0.25, yoyo: true, repeat: 1, stagger: 0.04, ease: "power2.out" });
   }
-
+function emojiConfetti(emoji) {
+  // Use regular confetti but with emoji-like colors and smaller particle count
+  const colors = {
+    '❤️‍🩹': ['#ff6b6b', '#ff8787', '#fa5252'],
+    '😊': ['#ffd43b', '#fab005', '#fcc419'],
+    '✨': ['#69db7e', '#51cf66', '#40c057'],
+    '😄': ['#ffa94d', '#ff922b', '#fd7e14']
+  };
+  
+  const emojiColors = colors[emoji] || ['#ff8787', '#fab005', '#69db7e', '#ffa94d'];
+  
+  // Fire smaller, optimized confetti bursts
+  confetti({
+    particleCount: 30,  // Reduced from 100
+    spread: 50,
+    origin: { y: 0.6 },
+    colors: emojiColors,
+    startVelocity: 25,
+    ticks: 100  // Reduced ticks for less computation
+  });
+  
+  confetti({
+    particleCount: 20,  // Reduced from 50
+    spread: 70,
+    origin: { y: 0.6, x: 0.3 },
+    colors: emojiColors,
+    startVelocity: 20,
+    ticks: 100
+  });
+  
+  confetti({
+    particleCount: 20,  // Reduced from 50
+    spread: 70,
+    origin: { y: 0.6, x: 0.7 },
+    colors: emojiColors,
+    startVelocity: 20,
+    ticks: 100
+  });
+  
+  // Add a simple CSS animation for one floating emoji (very lightweight)
+  const floatingEmoji = document.createElement('div');
+  floatingEmoji.textContent = emoji;
+  floatingEmoji.style.position = 'fixed';
+  floatingEmoji.style.left = Math.random() * window.innerWidth + 'px';
+  floatingEmoji.style.top = window.innerHeight / 2 + 'px';
+  floatingEmoji.style.fontSize = '40px';
+  floatingEmoji.style.zIndex = '9999';
+  floatingEmoji.style.pointerEvents = 'none';
+  floatingEmoji.style.animation = 'floatUp 2s ease-out forwards';
+  document.body.appendChild(floatingEmoji);
+  
+  // Add CSS animation if not exists
+  if (!document.querySelector('#emojiFloatStyle')) {
+    const style = document.createElement('style');
+    style.id = 'emojiFloatStyle';
+    style.textContent = `
+      @keyframes floatUp {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(-200px) rotate(20deg); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Remove after animation
+  setTimeout(() => floatingEmoji.remove(), 2000);
+}
   function initStars(canvas, n) {
     const ctx = canvas.getContext("2d");
     const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
