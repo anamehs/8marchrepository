@@ -46,18 +46,6 @@
     if (tg) tg.close();
     else window.close();
   });
-  // Add click handlers for chips
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', (e) => {
-    const effect = e.target.dataset.effect;
-    chipEffect(effect);
-    // Also pulse the clicked chip
-    gsap.fromTo(e.target, 
-      { scale: 1 }, 
-      { scale: 1.2, duration: 0.2, yoyo: true, repeat: 1 }
-    );
-  });
-});
 
   document.getElementById("shareBtn").addEventListener("click", async () => {
     const text = "С 8 марта! 💐";
@@ -122,60 +110,7 @@ document.querySelectorAll('.chip').forEach(chip => {
     const chips = document.querySelectorAll(".chip");
     gsap.fromTo(chips, { y: 0 }, { y: -6, duration: 0.25, yoyo: true, repeat: 1, stagger: 0.04, ease: "power2.out" });
   }
-function chipEffect(effect) {
-  // Different emoji for each chip
-  const emojis = {
-    health: ['💪', '❤️', '🌿', '💊'],
-    joy: ['😊', '🎉', '🌟', '✨'],
-    inspiration: ['💡', '🎨', '🌈', '⭐'],
-    smiles: ['😄', '😊', '😁', '😆']
-  };
-  
-  // Burst confetti with different colors for each chip
-  const colors = {
-    health: ['#ff6b6b', '#4ecdc4', '#45b7d1'],
-    joy: ['#ffe66d', '#ff9f1c', '#f9c74f'],
-    inspiration: ['#9d65c9', '#d4a5f0', '#c77dff'],
-    smiles: ['#ffb347', '#ff8c42', '#ff6b6b']
-  };
-  
-  // Launch confetti with specific colors
-  const chipColors = colors[effect] || ['#ffb3ba', '#c5e0b4', '#b5e6e6'];
-  
-  confetti({
-    particleCount: 80,
-    spread: 70,
-    origin: { y: 0.6 },
-    colors: chipColors,
-    startVelocity: 25,
-    decay: 0.9,
-    ticks: 200
-  });
-  
-  // Launch emoji rain
-  const emojiList = emojis[effect] || ['🎯'];
-  for (let i = 0; i < 15; i++) {
-    setTimeout(() => {
-      const emoji = document.createElement('div');
-      emoji.textContent = emojiList[Math.floor(Math.random() * emojiList.length)];
-      emoji.style.position = 'fixed';
-      emoji.style.left = Math.random() * 100 + '%';
-      emoji.style.top = '-50px';
-      emoji.style.fontSize = (20 + Math.random() * 30) + 'px';
-      emoji.style.zIndex = '1000';
-      emoji.style.pointerEvents = 'none';
-      emoji.style.animation = `fall ${3 + Math.random() * 3}s linear forwards`;
-      document.body.appendChild(emoji);
-      
-      setTimeout(() => emoji.remove(), 6000);
-    }, i * 100);
-  }
-  
-  // Haptic feedback if in Telegram
-  if (window.Telegram?.WebApp) {
-    window.Telegram.WebApp.HapticFeedback?.impactOccurred('light');
-  }
-}
+
   function initStars(canvas, n) {
     const ctx = canvas.getContext("2d");
     const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
